@@ -1,0 +1,37 @@
+pip install streamlit
+import streamlit as st
+import joblib
+import pandas as pd
+
+# Cargar el modelo entrenado
+model = joblib.load('ensemble_model.pkl')
+
+# Título y descripción
+st.title("Predicción de Nivel de Estrés")
+st.write("Esta aplicación predice el nivel de estrés basado en factores individuales.")
+
+# Campos de entrada
+anxiety_level = st.number_input("Nivel de Ansiedad", min_value=0, max_value=20, value=10)
+self_esteem = st.number_input("Autoestima", min_value=0, max_value=30, value=15)
+mental_health_history = st.selectbox("Historial de Salud Mental (0=No, 1=Sí)", [0, 1])
+depression = st.number_input("Nivel de Depresión", min_value=0, max_value=20, value=10)
+headache = st.number_input("Frecuencia de Dolor de Cabeza", min_value=0, max_value=10, value=5)
+
+# Agregar más entradas según sea necesario
+input_data = {
+    'anxiety_level': anxiety_level,
+    'self_esteem': self_esteem,
+    'mental_health_history': mental_health_history,
+    'depression': depression,
+    'headache': headache,
+}
+
+# Botón para realizar la predicción
+if st.button("Predecir Nivel de Estrés"):
+    # Convertir entradas a DataFrame
+    input_df = pd.DataFrame([input_data])
+    
+    # Realizar predicción
+    prediction = model.predict(input_df)
+    st.write(f"El nivel de estrés predicho es: **{int(prediction[0])}**")
+streamlit run app.py
